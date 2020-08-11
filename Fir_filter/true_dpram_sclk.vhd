@@ -2,14 +2,20 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+--Port A reads/writes in the first half of the used RAM (addresses from 0 to 1023),
+--which is reserved for INPUT
+
+--Port B reads/writes in the second half of the used RAM (addresses from 1024 to 2047)
+--which is reserved for OUTPUT
+
 entity dpram is
 	port 
 	(	
-		data_a	: in std_logic_vector(7 downto 0);
+		data_a	: in std_logic_vector(7 downto 0); 
 		data_b	: in std_logic_vector(7 downto 0);
-		addr_a	: in natural range 0 to 63;
-		addr_b	: in natural range 0 to 63;
-		we_a	: in std_logic := '1';
+		addr_a	: in natural range 0 to 15; 
+		addr_b	: in natural range 16 to 31;
+		we_a	: in std_logic := '1'; 
 		we_b	: in std_logic := '1';
 		clk		: in std_logic;
 		q_a		: out std_logic_vector(7 downto 0);
@@ -23,7 +29,7 @@ architecture rtl of dpram is
 	
 	-- Build a 2-D array type for the RAM
 	subtype word_t is std_logic_vector(7 downto 0);
-	type memory_t is array(63 downto 0) of word_t;
+	type memory_t is array(31 downto 0) of word_t; --Allocate 2kB of RAM
 	
 	-- Declare the RAM
 	shared variable ram : memory_t;
@@ -43,12 +49,10 @@ begin
 	
 	-- Port B
 	process(clk)
-	   variable temp : signed(7 downto 0);
 	begin
 		if(rising_edge(clk)) then
 			if(we_b = '1') then
-			    temp := signed(data_a) + 1;
-				ram(addr_b) := std_logic_vector(temp); --data_b
+				ram(addr_b) := data_b; 
 			end if;
 			q_b <= ram(addr_b);
 		end if;

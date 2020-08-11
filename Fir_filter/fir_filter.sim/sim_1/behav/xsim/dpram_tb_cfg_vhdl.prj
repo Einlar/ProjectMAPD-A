@@ -1,7 +1,7 @@
 # compile vhdl design source files
 vhdl xil_defaultlib  \
 "../../../../true_dpram_sclk.vhd" \
-"../../../../test_dpram.vhdl" \
+"../../../../fir_filter.srcs/sim_1/imports/Fir_filter/test_dpram.vhd" \
 
 # Do not sort compile order
 nosort
