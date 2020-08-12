@@ -47,15 +47,17 @@ architecture Behavioral of tb_top is
             i_coeff_2 : in  std_logic_vector(7 downto 0);
             i_coeff_3 : in  std_logic_vector(7 downto 0);
             data_a	: in std_logic_vector(7 downto 0);
-            addr_a	: in natural range 0 to 15;
-            addr_b	: in natural range 16 to 31;
             q_b		: out std_logic_vector(7 downto 0);
             read_data : in std_logic;
             compute : in std_logic;
             n_state : out natural range 0 to 2;
             rrama : out std_logic_vector(7 downto 0);
             rramb : out std_logic_vector(7 downto 0);
-            wramb : out std_logic_vector(7 downto 0)
+            wramb : out std_logic_vector(7 downto 0);
+            busy : out std_logic;
+            p_addra : out natural range 0 to 15;
+            p_addrb : out natural range 16 to 31;
+            p_counter : out natural range 0 to 16
             );
     end component;
     
@@ -71,11 +73,14 @@ architecture Behavioral of tb_top is
     signal i_coeff_3  : std_logic_vector(7 downto 0) := X"01";  -- [in]
 
     signal data_a	: std_logic_vector(7 downto 0);
-    signal addr_a	: natural range 0 to 15; 
-    signal addr_b	: natural range 16 to 31;
     signal q_b		: std_logic_vector(7 downto 0);
     signal n_state : natural range 0 to 2;
     signal rrama, rramb, wramb : std_logic_vector(7 downto 0);
+    signal busy : std_logic;
+    
+    signal p_addra :  natural range 0 to 15;
+    signal p_addrb :  natural range 16 to 31;
+    signal p_counter : natural range 0 to 16;
     
     constant RAM_SIZE : natural := 16;
     constant c_WIDTH  : natural := 8;
@@ -94,15 +99,17 @@ begin  -- architecture test
       i_coeff_2 => i_coeff_2,           -- [in  std_logic_vector(7 downto 0)]
       i_coeff_3 => i_coeff_3,           -- [in  std_logic_vector(7 downto 0)]
       data_a    => data_a,              -- [in  std_logic_vector(7 downto 0)]
-      addr_a    => addr_a,
-      addr_b    => addr_b,
       q_b          => q_b,
       read_data    => read_data,
       compute => compute,
       n_state => n_state,
       rrama => rrama,
       rramb => rramb,
-      wramb => wramb
+      wramb => wramb,
+      busy => busy,
+      p_addra => p_addra,
+      p_addrb => p_addrb,
+      p_counter => p_counter
       );             -- [out std_logic_vector(9 downto 0)]
 
   -- clock generation
@@ -138,75 +145,26 @@ begin  -- architecture test
     wait until rising_edge(clk);
     rstb <= '0';
     
-    while True loop
-      if endfile(file_VECTORS) then
-        lines_left := count_lines;
-        last_cycle := True;
-      end if;
+    read_data <= '1'; --Set Read mode
+    wait until rising_edge(clk); --Propagate state
+    
+    while not endfile(file_VECTORS) loop
 
-      read_data <= '1'; --Set Read mode
-      compute <= '0';
-      
-      wait until rising_edge(clk); --Propagate state
-      
-      addr_a <= count_lines;
-      addr_b <= count_lines + RAM_SIZE;
-      
-      if last_cycle then
-        data_a <= (others => '0');
-      else 
-         readline(file_VECTORS, v_ILINE);
-         read(v_ILINE, i_data_integer);
-         data_a <= std_logic_vector(to_unsigned(i_data_integer, data_a'length));
-      end if; 
-      
-      wait until rising_edge(clk);
-      
-      if not first_cycle then
-          o_data_integer := to_integer(unsigned(q_b));
-          write(v_OLINE, o_data_integer, left, c_WIDTH);
-          writeline(file_RESULTS, v_OLINE);
-      end if;
-      
-      count_lines := count_lines + 1;
-      
-      if count_lines = RAM_SIZE then
-        if first_cycle then
-            first_cycle := False;
-        end if;
-        
-        read_data <= '1';  --Set FIR mode
-        compute <= '1';
-        
-        for addr in 0 to RAM_SIZE - 1 loop
-            addr_a <= addr;
-            addr_b <= addr + RAM_SIZE;
-            
-            wait until rising_edge(clk);
-        end loop;  
-        
-        if last_cycle then
-            exit;
-        end if;
-        count_lines := 0;
-      end if;
-      
-    end loop;
-    
-    --Print the last block
-    read_data <= '1';
-    compute <= '0';
-    
-    for i in 0 to lines_left loop
-        addr_b <= i + RAM_SIZE;
-        o_data_integer := to_integer(unsigned(q_b));
+        readline(file_VECTORS, v_ILINE);
+        read(v_ILINE, i_data_integer);
+        data_a <= std_logic_vector(to_unsigned(i_data_integer, data_a'length));
         
         wait until rising_edge(clk);
         
-        write(v_OLINE, o_data_integer, left, c_WIDTH);
-        writeline(file_RESULTS, v_OLINE);
+        while busy = '1' loop
+            wait until rising_edge(clk);
+        end loop;
+      
+          --o_data_integer := to_integer(unsigned(q_b));
+          --write(v_OLINE, o_data_integer, left, c_WIDTH);
+          --writeline(file_RESULTS, v_OLINE);
+      
     end loop;
-    
     
     file_close(file_VECTORS);
     file_close(file_RESULTS);
