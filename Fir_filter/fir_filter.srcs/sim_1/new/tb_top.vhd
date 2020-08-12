@@ -51,7 +51,11 @@ architecture Behavioral of tb_top is
             addr_b	: in natural range 16 to 31;
             q_b		: out std_logic_vector(7 downto 0);
             read_data : in std_logic;
-            compute : in std_logic
+            compute : in std_logic;
+            n_state : out natural range 0 to 2;
+            rrama : out std_logic_vector(7 downto 0);
+            rramb : out std_logic_vector(7 downto 0);
+            wramb : out std_logic_vector(7 downto 0)
             );
     end component;
     
@@ -70,6 +74,8 @@ architecture Behavioral of tb_top is
     signal addr_a	: natural range 0 to 15; 
     signal addr_b	: natural range 16 to 31;
     signal q_b		: std_logic_vector(7 downto 0);
+    signal n_state : natural range 0 to 2;
+    signal rrama, rramb, wramb : std_logic_vector(7 downto 0);
     
     constant RAM_SIZE : natural := 16;
     constant c_WIDTH  : natural := 8;
@@ -92,7 +98,11 @@ begin  -- architecture test
       addr_b    => addr_b,
       q_b          => q_b,
       read_data    => read_data,
-      compute => compute
+      compute => compute,
+      n_state => n_state,
+      rrama => rrama,
+      rramb => rramb,
+      wramb => wramb
       );             -- [out std_logic_vector(9 downto 0)]
 
   -- clock generation
@@ -136,6 +146,8 @@ begin  -- architecture test
 
       read_data <= '1'; --Set Read mode
       compute <= '0';
+      
+      wait until rising_edge(clk); --Propagate state
       
       addr_a <= count_lines;
       addr_b <= count_lines + RAM_SIZE;

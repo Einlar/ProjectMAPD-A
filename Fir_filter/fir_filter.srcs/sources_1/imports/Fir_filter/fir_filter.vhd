@@ -35,7 +35,7 @@ begin
 
   p_input : process (i_rstb, i_clk)
   begin
-    if(i_rstb = '0') then
+    if(i_rstb = '1') then
       p_data  <= (others => (others => '0'));
       r_coeff <= (others => (others => '0'));
     elsif(rising_edge(i_clk)) then
@@ -49,7 +49,7 @@ begin
 
   p_mult : process (i_rstb, i_clk)
   begin
-    if(i_rstb = '0') then
+    if(i_rstb = '1') then
       r_mult <= (others => (others => '0'));
     elsif(rising_edge(i_clk)) then
       for k in 0 to 3 loop
@@ -60,7 +60,7 @@ begin
 
   p_add_st0 : process (i_rstb, i_clk)
   begin
-    if(i_rstb = '0') then
+    if(i_rstb = '1') then
       r_add_st0 <= (others => (others => '0'));
     elsif(rising_edge(i_clk)) then
       for k in 0 to 1 loop
@@ -71,7 +71,7 @@ begin
 
   p_add_st1 : process (i_rstb, i_clk)
   begin
-    if(i_rstb = '0') then
+    if(i_rstb = '1') then
       r_add_st1 <= (others => '0');
     elsif(rising_edge(i_clk)) then
       r_add_st1 <= resize(r_add_st0(0), 18) + resize(r_add_st0(1), 18);
@@ -80,7 +80,7 @@ begin
 
   p_output : process (i_rstb, i_clk)
   begin
-    if(i_rstb = '0') then
+    if(i_rstb = '1') then
       o_data <= (others => '0');
     elsif(rising_edge(i_clk)) then
       o_data <= std_logic_vector(r_add_st1(7 downto 0)); --was 9 down to 0

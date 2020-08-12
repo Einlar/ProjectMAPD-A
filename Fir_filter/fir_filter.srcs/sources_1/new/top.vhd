@@ -43,7 +43,11 @@ entity top is
                 --q_a		: out std_logic_vector(7 downto 0);
                 q_b		: out std_logic_vector(7 downto 0);
                 read_data : in std_logic;
-                compute : in std_logic
+                compute : in std_logic;
+                n_state : out natural range 0 to 2;
+                rrama : out std_logic_vector(7 downto 0);
+                rramb : out std_logic_vector(7 downto 0);
+                wramb : out std_logic_vector(7 downto 0)
             );
 end top;
 
@@ -114,6 +118,9 @@ begin
         rst_dpr   => t_rstb  
    );
    
+   rrama <= read_ram_a;
+   rramb <= read_ram_b;
+   wramb <= write_ram_b;
    
     p_reg : process(t_clk, t_rstb) is --Current State Register
     begin
@@ -124,10 +131,12 @@ begin
         end if;
     end process;
     
-    p_cmb : process(state_curr) is --State Logic
+    p_cmb : process(state_curr, read_data, compute) is --State Logic
     begin            
         case state_curr is
             when s_idle => --Idle state: do nothing
+                n_state <= 0;
+                
                 we_a <= '0';
                 we_b <= '0';
                 
@@ -137,6 +146,8 @@ begin
                 end if;
                 
             when s_io => --Input/Output state: write from file to RAM A + read from RAM B to file
+                n_state <= 1;
+                
                 we_a <= '1';
                 we_b <= '0';
                 
@@ -149,6 +160,8 @@ begin
                 end if;
                        
             when s_fir => --FIR State: compute the filter, read from RAM A and write to RAM B
+                n_state <= 2;
+                
                 we_a <= '0';
                 we_b <= '1';
                 
