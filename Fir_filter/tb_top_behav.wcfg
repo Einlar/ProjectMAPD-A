@@ -11,14 +11,14 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0fs"></ZoomStartTime>
-      <ZoomEndTime time="291393fs"></ZoomEndTime>
-      <Cursor1Time time="194920fs"></Cursor1Time>
+      <ZoomEndTime time="475627fs"></ZoomEndTime>
+      <Cursor1Time time="185000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="174"></NameColumnWidth>
+      <NameColumnWidth column_width="194"></NameColumnWidth>
       <ValueColumnWidth column_width="102"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="20" />
+   <WVObjectSize size="16" />
    <wvobject fp_name="/tb_top/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -35,26 +35,9 @@
       <obj_property name="ElementShortName">compute</obj_property>
       <obj_property name="ObjectShortName">compute</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_top/i_coeff_0" type="array">
-      <obj_property name="ElementShortName">i_coeff_0[7:0]</obj_property>
-      <obj_property name="ObjectShortName">i_coeff_0[7:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/i_coeff_1" type="array">
-      <obj_property name="ElementShortName">i_coeff_1[7:0]</obj_property>
-      <obj_property name="ObjectShortName">i_coeff_1[7:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/i_coeff_2" type="array">
-      <obj_property name="ElementShortName">i_coeff_2[7:0]</obj_property>
-      <obj_property name="ObjectShortName">i_coeff_2[7:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/i_coeff_3" type="array">
-      <obj_property name="ElementShortName">i_coeff_3[7:0]</obj_property>
-      <obj_property name="ObjectShortName">i_coeff_3[7:0]</obj_property>
-   </wvobject>
    <wvobject fp_name="/tb_top/data_a" type="array">
       <obj_property name="ElementShortName">data_a[7:0]</obj_property>
       <obj_property name="ObjectShortName">data_a[7:0]</obj_property>
-      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
       <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_top/q_b" type="array">
@@ -80,14 +63,6 @@
       <obj_property name="ObjectShortName">wramb[7:0]</obj_property>
       <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_top/RAM_SIZE" type="other">
-      <obj_property name="ElementShortName">RAM_SIZE</obj_property>
-      <obj_property name="ObjectShortName">RAM_SIZE</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/c_WIDTH" type="other">
-      <obj_property name="ElementShortName">c_WIDTH</obj_property>
-      <obj_property name="ObjectShortName">c_WIDTH</obj_property>
-   </wvobject>
    <wvobject fp_name="/tb_top/busy" type="logic">
       <obj_property name="ElementShortName">busy</obj_property>
       <obj_property name="ObjectShortName">busy</obj_property>
@@ -103,5 +78,13 @@
    <wvobject fp_name="/tb_top/p_counter" type="other">
       <obj_property name="ElementShortName">p_counter</obj_property>
       <obj_property name="ObjectShortName">p_counter</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/RAM_SIZE" type="other">
+      <obj_property name="ElementShortName">RAM_SIZE</obj_property>
+      <obj_property name="ObjectShortName">RAM_SIZE</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/c_WIDTH" type="other">
+      <obj_property name="ElementShortName">c_WIDTH</obj_property>
+      <obj_property name="ObjectShortName">c_WIDTH</obj_property>
    </wvobject>
 </wave_config>

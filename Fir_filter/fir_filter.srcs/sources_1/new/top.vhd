@@ -150,6 +150,8 @@ begin
             when s_idle => --Idle state: do nothing
                 n_state <= 0;
                 
+                fir_input <= (others => '0'); 
+                
                 we_a <= '0';
                 we_b <= '0';
                 
@@ -187,35 +189,45 @@ begin
                        
             when s_fir => --FIR State: compute the filter, read from RAM A and write to RAM B
                 n_state <= 2;
-                
                 we_a <= '0';
-                we_b <= '1';
                 
                 if rst_counter = '1' then
                     addra <= 0;
                     addrb <= RAM_SIZE;
                     rst_counter <= '0';
                 end if;
-    
+                
                 if rising_edge(t_clk) then
-                    if counter /= 2 * RAM_SIZE - 1 then
-                        counter <= counter + 1;
-                    else
-                        counter <= 0;
-                    end if;
-                    
-                    if (counter mod 2) = 0 then
+                    counter <= counter + 1;
+                end if;
+                
+                if rising_edge(t_clk) and counter > 1 then
+                        
                         fir_input <= read_ram_a;
-                    else
                         write_ram_b <= fir_output;
-                        if addra /= RAM_SIZE - 1 then -- /= means "not equal to"
+                        
+                        if addra /= RAM_SIZE - 1 then
                             addra <= addra + 1;
-                            addrb <= addrb + 1;
-                        else
-                            addra <= 0;
-                            addrb <= RAM_SIZE;
                         end if;
-                    end if;
+                        
+                        if counter > 9 then
+                            we_b <= '1';
+                            
+                            if addrb /= 2 * RAM_SIZE - 1 then
+                                addrb <= addrb + 1;
+                            end if;
+                            
+                            if addrb = 2 * RAM_SIZE - 2 then
+                                state_next <= s_io;
+                                addra <= 0;
+                                addrb <= RAM_SIZE;
+                                counter <= 0;
+                                busy <= '0';
+                            end if;
+                        end if;
+                        
+                   
+                   
                    
                 end if;
                 

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_top_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="tb_top" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="5090667fs"></ZoomStartTime>
+      <ZoomEndTime time="5296668fs"></ZoomEndTime>
+      <Cursor1Time time="5165000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="180"></NameColumnWidth>
+      <ValueColumnWidth column_width="102"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="13" />
+   <wvobject fp_name="/tb_top/clk" type="logic">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/rstb" type="logic">
+      <obj_property name="ElementShortName">rstb</obj_property>
+      <obj_property name="ObjectShortName">rstb</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/we_a" type="logic">
+      <obj_property name="ElementShortName">we_a</obj_property>
+      <obj_property name="ObjectShortName">we_a</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/i_coeff_0" type="array">
+      <obj_property name="ElementShortName">i_coeff_0[7:0]</obj_property>
+      <obj_property name="ObjectShortName">i_coeff_0[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/i_coeff_1" type="array">
+      <obj_property name="ElementShortName">i_coeff_1[7:0]</obj_property>
+      <obj_property name="ObjectShortName">i_coeff_1[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/i_coeff_2" type="array">
+      <obj_property name="ElementShortName">i_coeff_2[7:0]</obj_property>
+      <obj_property name="ObjectShortName">i_coeff_2[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/i_coeff_3" type="array">
+      <obj_property name="ElementShortName">i_coeff_3[7:0]</obj_property>
+      <obj_property name="ObjectShortName">i_coeff_3[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/write_a" type="array">
+      <obj_property name="ElementShortName">write_a[7:0]</obj_property>
+      <obj_property name="ObjectShortName">write_a[7:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/read_a" type="array">
+      <obj_property name="ElementShortName">read_a[7:0]</obj_property>
+      <obj_property name="ObjectShortName">read_a[7:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/n_state" type="other">
+      <obj_property name="ElementShortName">n_state</obj_property>
+      <obj_property name="ObjectShortName">n_state</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/addr_a" type="array">
+      <obj_property name="ElementShortName">addr_a[9:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_a[9:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/ADDR_WIDTH" type="other">
+      <obj_property name="ElementShortName">ADDR_WIDTH</obj_property>
+      <obj_property name="ObjectShortName">ADDR_WIDTH</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/c_WIDTH" type="other">
+      <obj_property name="ElementShortName">c_WIDTH</obj_property>
+      <obj_property name="ObjectShortName">c_WIDTH</obj_property>
+   </wvobject>
+</wave_config>

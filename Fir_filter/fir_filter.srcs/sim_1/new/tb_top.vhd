@@ -156,13 +156,22 @@ begin  -- architecture test
         
         wait until rising_edge(clk);
         
+        if not first_cycle then
+            o_data_integer := to_integer(unsigned(q_b));
+            write(v_OLINE, o_data_integer, left, c_WIDTH);
+            writeline(file_RESULTS, v_OLINE);
+        end if;
+        
+        
+        
+        
+        
         while busy = '1' loop
             wait until rising_edge(clk);
+            first_cycle := False;
         end loop;
       
-          --o_data_integer := to_integer(unsigned(q_b));
-          --write(v_OLINE, o_data_integer, left, c_WIDTH);
-          --writeline(file_RESULTS, v_OLINE);
+          
       
     end loop;
     
