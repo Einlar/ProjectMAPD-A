@@ -6,6 +6,7 @@ entity fir_filter_4 is
   port (
     i_clk     : in  std_logic;
     i_rstb    : in  std_logic;
+    we_fir : in std_logic;
     -- coefficient
     i_coeff_0 : in  std_logic_vector(7 downto 0);
     i_coeff_1 : in  std_logic_vector(7 downto 0);
@@ -38,7 +39,7 @@ begin
     if(i_rstb = '1') then --Reset all signals
       p_data  <= (others => (others => '0'));
       r_coeff <= (others => (others => '0'));
-    elsif(rising_edge(i_clk)) then --Insert new byte at the beginning, shift the other 3 --RE 1
+    elsif(rising_edge(i_clk) and we_fir = '1') then --Insert new byte at the beginning, shift the other 3 --RE 1
       p_data     <= signed(i_data)&p_data(0 to p_data'length-2);
       r_coeff(0) <= signed(i_coeff_0);
       r_coeff(1) <= signed(i_coeff_1);

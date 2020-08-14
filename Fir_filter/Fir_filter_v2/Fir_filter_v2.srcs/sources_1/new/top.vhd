@@ -49,7 +49,9 @@ component fir_filter_4 is
     i_coeff_2 : in  std_logic_vector(7 downto 0);
     i_coeff_3 : in  std_logic_vector(7 downto 0);
     i_data    : in  std_logic_vector(7 downto 0);
-    o_data    : out std_logic_vector(7 downto 0)); 
+    o_data    : out std_logic_vector(7 downto 0);
+    we_fir : in std_logic
+    );
 end component; 
 
 signal addr_b : std_logic_vector(ADDR_WIDTH - 1 downto 0);
@@ -61,6 +63,7 @@ constant HALF_RAM : natural := 2 ** (ADDR_WIDTH - 1) - 1;
 signal counter : integer := 0;--std_logic_vector(ADDR_WIDTH - 2 downto 0);
     
 signal state_curr, state_next : state;
+signal we_fir : std_logic;
 
 begin
 dpr : dpram
@@ -87,7 +90,8 @@ fir : fir_filter_4
         i_coeff_2 => i_coeff_2,
         i_coeff_3 => i_coeff_3,
         i_data     => fir_input,
-        o_data   => fir_output
+        o_data   => fir_output,
+        we_fir => we_fir
     );
 
     p_reg : process(clk, rstb) is --Current State Register
@@ -104,13 +108,15 @@ fir : fir_filter_4
         case state_curr is
             when s_idle => 
                 n_state <= 0;
+                --counter <= 0; --(others => '0');
                 
-                counter <= 0; --(others => '0');
+                we_fir <= '0';
                 
                 if we_a = '1' then
                     state_next <= s_load;
                 end if;
-            
+                
+
             when s_load =>
                 n_state <= 1;
                 
@@ -124,28 +130,33 @@ fir : fir_filter_4
                 n_state <= 2;
                 
                 we_b <= '0';
+                we_fir <= '1';
                 
                 addr_b <= std_logic_vector(to_unsigned(counter, addr_b'length));
                 
                 --addr_b(0) <= '0'; --Read from first half of RAM
                 --addr_b(ADDR_WIDTH - 1 downto 1) <= counter;
                 
-                fir_input <= std_logic_vector(to_unsigned(counter, fir_input'length)); --read_b
+                --fir_input <= read_b; --std_logic_vector(to_unsigned(counter, fir_input'length))
                 
                 state_next <= s_write;
                 
             when s_write =>
                 n_state <= 3;
                 
+                fir_input <= read_b;
+                
                 we_b <= '1';
+                we_fir <= '0';
                 
                 addr_b <= std_logic_vector(to_unsigned(counter + HALF_RAM, addr_b'length));
                 
-                write_b <= std_logic_vector(to_unsigned(counter, fir_input'length));
+                
+                
+                write_b <= fir_output;
 
                 
                 if counter /= HALF_RAM - 1 then
-                    counter <= counter + 1;
                     state_next <= s_read;
                 else
                     state_next <= s_idle; 
@@ -157,5 +168,15 @@ fir : fir_filter_4
             end case;
     end process;
     
+    p_counter : process(state_curr, clk) is
+    begin
+        if state_curr = s_write and rising_edge(clk) then
+            if counter /= HALF_RAM then
+                counter <= counter + 1;
+            else
+                counter <= 0;
+            end if;
+        end if;
+    end process;
     
 end Behavioral;
