@@ -145,18 +145,16 @@ begin  -- architecture test
     while n_state /= 0 loop
         wait until rising_edge(clk); --Wait for computations
     end loop;
-    
-    addr_a <= (others => '0');
-    addr_a(ADDR_WIDTH - 1 ) <= '1';
 
-    for i in 0 to 2 ** (ADDR_WIDTH - 1) - 1 loop   --Write
+    for i in 3 to 2 ** (ADDR_WIDTH - 1) - 1 loop   --Write
+        addr_a <= std_logic_vector(to_unsigned(i + 512, addr_a'length));
+        
+        wait until rising_edge(clk);
+        
         o_data_integer := to_integer(signed(read_a));
         write(v_OLINE, o_data_integer, left, c_WIDTH);
         writeline(file_RESULTS, v_OLINE);  
-           
-        wait until rising_edge(clk);
-        
-        addr_a <= std_logic_vector(unsigned(addr_a) + 1);
+
     end loop;
     
     file_close(file_VECTORS);

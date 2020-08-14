@@ -126,7 +126,7 @@ fir : fir_filter_4
                 
                 fir_input <= (others => '0');
             
-            when s_read =>
+            when s_read => --Access RAM for data
                 n_state <= 2;
                 
                 we_b <= '0';
@@ -134,14 +134,9 @@ fir : fir_filter_4
                 
                 addr_b <= std_logic_vector(to_unsigned(counter, addr_b'length));
                 
-                --addr_b(0) <= '0'; --Read from first half of RAM
-                --addr_b(ADDR_WIDTH - 1 downto 1) <= counter;
-                
-                --fir_input <= read_b; --std_logic_vector(to_unsigned(counter, fir_input'length))
-                
                 state_next <= s_write;
                 
-            when s_write =>
+            when s_write => --Compute the filter and write the result in RAM
                 n_state <= 3;
                 
                 fir_input <= read_b;
@@ -151,10 +146,7 @@ fir : fir_filter_4
                 
                 addr_b <= std_logic_vector(to_unsigned(counter + HALF_RAM, addr_b'length));
                 
-                
-                
                 write_b <= fir_output;
-
                 
                 if counter /= HALF_RAM - 1 then
                     state_next <= s_read;
