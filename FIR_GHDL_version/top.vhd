@@ -7,9 +7,6 @@ entity top is
                 clk    : in  std_logic;
                 rstb   : in  std_logic;
                 i_coeff : in  std_logic_vector(31 downto 0);
-                --i_coeff_1 : in  std_logic_vector(DATA_WIDTH downto 0);
-                --i_coeff_2 : in  std_logic_vector(DATA_WIDTH downto 0);
-                --i_coeff_3 : in  std_logic_vector(DATA_WIDTH downto 0);
                 addr_a : in std_logic_vector(9 downto 0);
                 we_a : in std_logic;
                 write_a : in std_logic_vector(31 downto 0);
@@ -53,12 +50,8 @@ component fir_filter_4 is
     i_clk     : in  std_logic;
     i_rstb    : in  std_logic;
     i_coeff : in  std_logic_vector(DATA_WIDTH -1 downto 0);
-    --i_coeff_1 : in  std_logic_vector(DATA_WIDTH downto 0);
-    --i_coeff_2 : in  std_logic_vector(DATA_WIDTH downto 0);
-    --i_coeff_3 : in  std_logic_vector(DATA_WIDTH downto 0);
     i_data    : in  std_logic_vector(DATA_WIDTH -1 downto 0);
     o_data    : out std_logic_vector(DATA_WIDTH -1 downto 0);
-    -- o_data    : out std_logic_vector(2*DATA_WIDTH -1 downto 0);
     we_fir    : in std_logic;
     load      : in std_logic
     );
@@ -66,12 +59,11 @@ end component;
 
 signal addr_b : std_logic_vector(ADDR_WIDTH - 1 downto 0);
 signal fir_input, fir_output, read_b, write_b : std_logic_vector(DATA_WIDTH -1 downto 0);
---signal fir_output std_logic_vector(2*DATA_WIDTH + 1 downto 0);
 signal we_b : std_logic;
 type state is (s_idle, s_load, s_read, s_write); --States for the FSM
 
 constant HALF_RAM : natural := 2 ** (ADDR_WIDTH - 1) - 1;
-signal counter : integer := 0;--std_logic_vector(ADDR_WIDTH - 2 downto 0);
+signal counter : integer := 0;
     
 signal state_curr, state_next : state;
 signal we_fir : std_logic;
@@ -101,9 +93,6 @@ fir : fir_filter_4
         i_clk     => clk,
         i_rstb    => rstb,
         i_coeff   => i_coeff,
-        --i_coeff_1 => i_coeff_1,
-        --i_coeff_2 => i_coeff_2,
-        --i_coeff_3 => i_coeff_3,
         i_data    => fir_input,
         o_data    => fir_output,
         we_fir    => we_fir,
@@ -124,7 +113,6 @@ fir : fir_filter_4
         case state_curr is
             when s_idle => 
                 n_state <= 0;
-                --counter <= 0; --(others => '0');
                 
                 we_fir <= '0';
                 

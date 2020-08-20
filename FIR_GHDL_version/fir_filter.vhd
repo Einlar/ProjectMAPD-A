@@ -12,15 +12,9 @@ entity fir_filter_4 is
     i_rstb    : in  std_logic;
     we_fir : in std_logic;
     load:    in std_logic := '0';
-    -- coefficient
     i_coeff : in  std_logic_vector (DATA_WIDTH -1 downto 0);
-    --i_coeff_1 : in  std_logic_vector(7 downto 0);
-    --i_coeff_2 : in  std_logic_vector(7 downto 0);
-    --i_coeff_3 : in  std_logic_vector(7 downto 0);
-    -- data input
     i_data    : in  std_logic_vector(DATA_WIDTH -1 downto 0);
-    -- filtered data 
-    o_data    : out std_logic_vector(DATA_WIDTH -1 downto 0)); --was 9 downto 0
+    o_data    : out std_logic_vector(DATA_WIDTH -1 downto 0));
 end fir_filter_4;
 
 architecture rtl of fir_filter_4 is
@@ -49,9 +43,6 @@ begin
       if load = '1' then
         r_coeff <= signed(i_coeff)&r_coeff(0 to r_coeff'length-2);
       end if;
-      --r_coeff(1) <= signed(i_coeff_1);
-      --r_coeff(2) <= signed(i_coeff_2);
-      --r_coeff(3) <= signed(i_coeff_3);
     end if;
   end process p_input;
 
@@ -59,7 +50,7 @@ begin
   begin
     if(i_rstb = '1') then
       r_mult <= (others => (others => '0'));
-    elsif(rising_edge(i_clk)) then --RE 2
+    elsif(rising_edge(i_clk)) then 
       for k in 0 to N_TAPS-1 loop
         r_mult(k) <= p_data(k) * r_coeff(k);
       end loop;
@@ -70,7 +61,7 @@ begin
   begin
     if(i_rstb = '1') then
       r_add_st0 <= (others => (others => '0'));
-    elsif(rising_edge(i_clk)) then --RE 3
+    elsif(rising_edge(i_clk)) then
       for k in 0 to N_TAPS/2-1 loop
         r_add_st0(k) <= resize(r_mult(2*k), 2*DATA_WIDTH+1) + resize(r_mult(2*k+1), 2*DATA_WIDTH+1);
       end loop;
@@ -83,7 +74,7 @@ begin
     tmp := (others => '0');
     if(i_rstb = '1') then
       r_add_st1 <= (others => '0');
-    elsif(rising_edge(i_clk)) then --RE 4
+    elsif(rising_edge(i_clk)) then 
       for k in 0 to N_TAPS/2-1 loop
         tmp := tmp + resize(r_add_st0(k), 2*DATA_WIDTH+2);
       end loop;
@@ -95,7 +86,7 @@ begin
   begin
     if(i_rstb = '1') then
       o_data <= (others => '0');
-    elsif(rising_edge(i_clk)) then --RE 5
+    elsif(rising_edge(i_clk)) then 
       o_data <= std_logic_vector(r_add_st1(DATA_WIDTH-1 downto 0)); 
     end if;
   end process p_output;

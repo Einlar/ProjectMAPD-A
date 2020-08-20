@@ -1,37 +1,8 @@
-----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date: 11.08.2020 18:22:40
--- Design Name: 
--- Module Name: tb_top - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
--- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
--- 
-----------------------------------------------------------------------------------
-
-
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 use STD.textio.all;
 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
 
 entity tb_top is
 --  Port ( );
@@ -43,28 +14,22 @@ constant N_TAPS : integer := 16;
 constant DATA_WIDTH : integer := 32;
 component top is
     Port ( 
-                clk    : in  std_logic;
-                rstb   : in  std_logic;
-                i_coeff : in  std_logic_vector(DATA_WIDTH-1 downto 0);
-                --i_coeff_1 : in  std_logic_vector(DATA_WIDTH-1 downto 0);
-                --i_coeff_2 : in  std_logic_vector(DATA_WIDTH-1 downto 0);
-                --i_coeff_3 : in  std_logic_vector(DATA_WIDTH-1 downto 0);
-                addr_a : in std_logic_vector(ADDR_WIDTH - 1 downto 0);
-                we_a : in std_logic;
-                write_a : in std_logic_vector(DATA_WIDTH-1 downto 0);
-                read_a : out std_logic_vector(DATA_WIDTH-1 downto 0);
-                n_state : out natural range 0 to 3;
-                load    : in std_logic := '0'
-            );
+          clk    : in  std_logic;
+          rstb   : in  std_logic;
+          i_coeff : in  std_logic_vector(DATA_WIDTH-1 downto 0);
+          addr_a : in std_logic_vector(ADDR_WIDTH - 1 downto 0);
+          we_a : in std_logic;
+          write_a : in std_logic_vector(DATA_WIDTH-1 downto 0);
+          read_a : out std_logic_vector(DATA_WIDTH-1 downto 0);
+          n_state : out natural range 0 to 3;
+          load    : in std_logic := '0'
+          );
 end component;
     
     signal clk : std_logic := '0';
     signal rstb, we_a : std_logic;
     
-    signal i_coeff  : std_logic_vector(DATA_WIDTH-1 downto 0);  -- [in]
-    --signal i_coeff_1  : std_logic_vector(DATA_WIDTH-1 downto 0) := X"01";  -- [in]
-    --signal i_coeff_2  : std_logic_vector(DATA_WIDTH-1 downto 0) := X"01";  -- [in]
-    --signal i_coeff_3  : std_logic_vector(DATA_WIDTH-1 downto 0) := X"01";  -- [in]
+    signal i_coeff  : std_logic_vector(DATA_WIDTH-1 downto 0);
     signal load       : std_logic := '0';
 
     signal write_a	: std_logic_vector(DATA_WIDTH-1 downto 0);
@@ -76,17 +41,12 @@ end component;
     file file_RESULTS : text;
     file file_COEFFICIENTS : text;
 
-begin  -- architecture test
-
-  -- component instantiation
+begin  
   DUT : top
     port map (
       clk     => clk,               
       rstb    => rstb,             
-      i_coeff => i_coeff,           
-      --i_coeff_1 => i_coeff_1,       
-      --i_coeff_2 => i_coeff_2,        
-      --i_coeff_3 => i_coeff_3,      
+      i_coeff => i_coeff,             
       addr_a => addr_a,
       we_a => we_a,
       write_a    => write_a,             
@@ -183,6 +143,5 @@ begin  -- architecture test
 
     wait;
   end process WaveGen_Proc;
-
 
 end Behavioral;

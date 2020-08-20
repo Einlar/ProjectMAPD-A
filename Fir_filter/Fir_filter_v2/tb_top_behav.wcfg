@@ -10,148 +10,30 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="5127250fs"></ZoomStartTime>
-      <ZoomEndTime time="5370825fs"></ZoomEndTime>
-      <Cursor1Time time="5175000fs"></Cursor1Time>
+      <ZoomStartTime time="15364657fs"></ZoomStartTime>
+      <ZoomEndTime time="15666721fs"></ZoomEndTime>
+      <Cursor1Time time="15435000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="152"></NameColumnWidth>
+      <NameColumnWidth column_width="213"></NameColumnWidth>
       <ValueColumnWidth column_width="102"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="30" />
+   <WVObjectSize size="4" />
    <wvobject fp_name="/tb_top/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_top/rstb" type="logic">
-      <obj_property name="ElementShortName">rstb</obj_property>
-      <obj_property name="ObjectShortName">rstb</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/we_a" type="logic">
-      <obj_property name="ElementShortName">we_a</obj_property>
-      <obj_property name="ObjectShortName">we_a</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/i_coeff_0" type="array">
-      <obj_property name="ElementShortName">i_coeff_0[7:0]</obj_property>
-      <obj_property name="ObjectShortName">i_coeff_0[7:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/i_coeff_1" type="array">
-      <obj_property name="ElementShortName">i_coeff_1[7:0]</obj_property>
-      <obj_property name="ObjectShortName">i_coeff_1[7:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/i_coeff_2" type="array">
-      <obj_property name="ElementShortName">i_coeff_2[7:0]</obj_property>
-      <obj_property name="ObjectShortName">i_coeff_2[7:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/i_coeff_3" type="array">
-      <obj_property name="ElementShortName">i_coeff_3[7:0]</obj_property>
-      <obj_property name="ObjectShortName">i_coeff_3[7:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/write_a" type="array">
-      <obj_property name="ElementShortName">write_a[7:0]</obj_property>
-      <obj_property name="ObjectShortName">write_a[7:0]</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/read_a" type="array">
-      <obj_property name="ElementShortName">read_a[7:0]</obj_property>
-      <obj_property name="ObjectShortName">read_a[7:0]</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/n_state" type="other">
-      <obj_property name="ElementShortName">n_state</obj_property>
-      <obj_property name="ObjectShortName">n_state</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/addr_a" type="array">
+   <wvobject fp_name="/tb_top/DUT/dpr/addr_a" type="array">
       <obj_property name="ElementShortName">addr_a[9:0]</obj_property>
       <obj_property name="ObjectShortName">addr_a[9:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_top/ADDR_WIDTH" type="other">
-      <obj_property name="ElementShortName">ADDR_WIDTH</obj_property>
-      <obj_property name="ObjectShortName">ADDR_WIDTH</obj_property>
+   <wvobject fp_name="/tb_top/read_a" type="array">
+      <obj_property name="ElementShortName">read_a[31:0]</obj_property>
+      <obj_property name="ObjectShortName">read_a[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_top/c_WIDTH" type="other">
-      <obj_property name="ElementShortName">c_WIDTH</obj_property>
-      <obj_property name="ObjectShortName">c_WIDTH</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/DUT/fir_input" type="array">
-      <obj_property name="ElementShortName">fir_input[7:0]</obj_property>
-      <obj_property name="ObjectShortName">fir_input[7:0]</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/DUT/fir_output" type="array">
-      <obj_property name="ElementShortName">fir_output[7:0]</obj_property>
-      <obj_property name="ObjectShortName">fir_output[7:0]</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/DUT/fir/i_data" type="array">
-      <obj_property name="ElementShortName">i_data[7:0]</obj_property>
-      <obj_property name="ObjectShortName">i_data[7:0]</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/DUT/fir/o_data" type="array">
-      <obj_property name="ElementShortName">o_data[7:0]</obj_property>
-      <obj_property name="ObjectShortName">o_data[7:0]</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/DUT/fir/r_coeff" type="array">
-      <obj_property name="ElementShortName">r_coeff[0:3][7:0]</obj_property>
-      <obj_property name="ObjectShortName">r_coeff[0:3][7:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/DUT/fir/p_data" type="array">
-      <obj_property name="ElementShortName">p_data[0:3][7:0]</obj_property>
-      <obj_property name="ObjectShortName">p_data[0:3][7:0]</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/DUT/fir/r_mult" type="array">
-      <obj_property name="ElementShortName">r_mult[0:3][15:0]</obj_property>
-      <obj_property name="ObjectShortName">r_mult[0:3][15:0]</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/DUT/fir/r_add_st0" type="array">
-      <obj_property name="ElementShortName">r_add_st0[0:1][16:0]</obj_property>
-      <obj_property name="ObjectShortName">r_add_st0[0:1][16:0]</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/DUT/fir/r_add_st1" type="array">
-      <obj_property name="ElementShortName">r_add_st1[17:0]</obj_property>
-      <obj_property name="ObjectShortName">r_add_st1[17:0]</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/DUT/dpr/we_a" type="logic">
-      <obj_property name="ElementShortName">we_a</obj_property>
-      <obj_property name="ObjectShortName">we_a</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/DUT/dpr/we_b" type="logic">
-      <obj_property name="ElementShortName">we_b</obj_property>
-      <obj_property name="ObjectShortName">we_b</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/DUT/dpr/q_a" type="array">
-      <obj_property name="ElementShortName">q_a[7:0]</obj_property>
-      <obj_property name="ObjectShortName">q_a[7:0]</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/DUT/dpr/q_b" type="array">
-      <obj_property name="ElementShortName">q_b[7:0]</obj_property>
-      <obj_property name="ObjectShortName">q_b[7:0]</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/DUT/counter" type="other">
-      <obj_property name="ElementShortName">counter</obj_property>
-      <obj_property name="ObjectShortName">counter</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/DUT/read_b" type="array">
-      <obj_property name="ElementShortName">read_b[7:0]</obj_property>
-      <obj_property name="ObjectShortName">read_b[7:0]</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/DUT/addr_b" type="array">
-      <obj_property name="ElementShortName">addr_b[9:0]</obj_property>
-      <obj_property name="ObjectShortName">addr_b[9:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_top/DUT/write_b" type="array">
-      <obj_property name="ElementShortName">write_b[7:0]</obj_property>
-      <obj_property name="ObjectShortName">write_b[7:0]</obj_property>
+   <wvobject fp_name="/tb_top/n_state" type="other">
+      <obj_property name="ElementShortName">n_state</obj_property>
+      <obj_property name="ObjectShortName">n_state</obj_property>
    </wvobject>
 </wave_config>

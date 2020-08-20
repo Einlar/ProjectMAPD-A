@@ -3,34 +3,33 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity fir_filter_4 is
+  generic(
+    N_TAPS     : natural;
+    DATA_WIDTH : natural
+	);
   port (
     i_clk     : in  std_logic;
     i_rstb    : in  std_logic;
     we_fir : in std_logic;
-    -- coefficient
-    i_coeff_0 : in  std_logic_vector(7 downto 0);
-    i_coeff_1 : in  std_logic_vector(7 downto 0);
-    i_coeff_2 : in  std_logic_vector(7 downto 0);
-    i_coeff_3 : in  std_logic_vector(7 downto 0);
-    -- data input
-    i_data    : in  std_logic_vector(7 downto 0);
-    -- filtered data 
-    o_data    : out std_logic_vector(7 downto 0)); --was 9 downto 0
+    load:    in std_logic := '0';
+    i_coeff : in  std_logic_vector (DATA_WIDTH -1 downto 0);
+    i_data    : in  std_logic_vector(DATA_WIDTH -1 downto 0);
+    o_data    : out std_logic_vector(DATA_WIDTH -1 downto 0));
 end fir_filter_4;
 
 architecture rtl of fir_filter_4 is
 
-  type t_data_pipe is array (0 to 3) of signed(7 downto 0); --Matrix 4x8
-  type t_coeff is array (0 to 3) of signed(7 downto 0); --Matrix 4x8
+  type t_data_pipe is array (0 to N_TAPS-1) of signed(DATA_WIDTH -1 downto 0); --Matrix N_TAPSx8
+  type t_coeff is array (0 to N_TAPS-1) of signed(DATA_WIDTH -1 downto 0); --Matrix N_TAPSx8
 
-  type t_mult is array (0 to 3) of signed(15 downto 0); --Matrix 4x16
-  type t_add_st0 is array (0 to 1) of signed(15+1 downto 0); --Matrix 2x17
+  type t_mult is array (0 to N_TAPS-1) of signed(2*DATA_WIDTH-1 downto 0); --Matrix 4x16
+  type t_add_st0 is array (0 to N_TAPS/2 -1) of signed(2*DATA_WIDTH downto 0); --Matrix 2x17
 
   signal r_coeff   : t_coeff; --Matrix 4x8
   signal p_data    : t_data_pipe; --Matrix 4x8
   signal r_mult    : t_mult; --Matrix 4x16
   signal r_add_st0 : t_add_st0; --Matrix 2x17
-  signal r_add_st1 : signed(15+2 downto 0); --Vector 18
+  signal r_add_st1 : signed(2*DATA_WIDTH+1 downto 0); --Vector 18
 
 begin
 
@@ -41,10 +40,9 @@ begin
       r_coeff <= (others => (others => '0'));
     elsif(rising_edge(i_clk) and we_fir = '1') then --Insert new byte at the beginning, shift the other 3 --RE 1
       p_data     <= signed(i_data)&p_data(0 to p_data'length-2);
-      r_coeff(0) <= signed(i_coeff_0);
-      r_coeff(1) <= signed(i_coeff_1);
-      r_coeff(2) <= signed(i_coeff_2);
-      r_coeff(3) <= signed(i_coeff_3);
+      if load = '1' then
+        r_coeff <= signed(i_coeff)&r_coeff(0 to r_coeff'length-2);
+      end if;
     end if;
   end process p_input;
 
@@ -52,8 +50,8 @@ begin
   begin
     if(i_rstb = '1') then
       r_mult <= (others => (others => '0'));
-    elsif(rising_edge(i_clk)) then --RE 2
-      for k in 0 to 3 loop
+    elsif(rising_edge(i_clk)) then 
+      for k in 0 to N_TAPS-1 loop
         r_mult(k) <= p_data(k) * r_coeff(k);
       end loop;
     end if;
@@ -63,19 +61,24 @@ begin
   begin
     if(i_rstb = '1') then
       r_add_st0 <= (others => (others => '0'));
-    elsif(rising_edge(i_clk)) then --RE 3
-      for k in 0 to 1 loop
-        r_add_st0(k) <= resize(r_mult(2*k), 17) + resize(r_mult(2*k+1), 17);
+    elsif(rising_edge(i_clk)) then
+      for k in 0 to N_TAPS/2-1 loop
+        r_add_st0(k) <= resize(r_mult(2*k), 2*DATA_WIDTH+1) + resize(r_mult(2*k+1), 2*DATA_WIDTH+1);
       end loop;
     end if;
   end process p_add_st0;
 
   p_add_st1 : process (i_rstb, i_clk) --Reduction second step
+  variable tmp: signed(2*DATA_WIDTH+1 downto 0):= (others => '0');
   begin
+    tmp := (others => '0');
     if(i_rstb = '1') then
       r_add_st1 <= (others => '0');
-    elsif(rising_edge(i_clk)) then --RE 4
-      r_add_st1 <= resize(r_add_st0(0), 18) + resize(r_add_st0(1), 18);
+    elsif(rising_edge(i_clk)) then 
+      for k in 0 to N_TAPS/2-1 loop
+        tmp := tmp + resize(r_add_st0(k), 2*DATA_WIDTH+2);
+      end loop;
+      r_add_st1 <= tmp;
     end if;
   end process p_add_st1;
 
@@ -83,8 +86,8 @@ begin
   begin
     if(i_rstb = '1') then
       o_data <= (others => '0');
-    elsif(rising_edge(i_clk)) then --RE 5
-      o_data <= std_logic_vector(r_add_st1(7 downto 0)); 
+    elsif(rising_edge(i_clk)) then 
+      o_data <= std_logic_vector(r_add_st1(DATA_WIDTH-1 downto 0)); 
     end if;
   end process p_output;
 end rtl;

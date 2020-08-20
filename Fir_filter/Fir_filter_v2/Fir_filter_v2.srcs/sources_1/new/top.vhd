@@ -6,72 +6,77 @@ entity top is
     Port ( 
                 clk    : in  std_logic;
                 rstb   : in  std_logic;
-                i_coeff_0 : in  std_logic_vector(7 downto 0);
-                i_coeff_1 : in  std_logic_vector(7 downto 0);
-                i_coeff_2 : in  std_logic_vector(7 downto 0);
-                i_coeff_3 : in  std_logic_vector(7 downto 0);
+                i_coeff : in  std_logic_vector(31 downto 0);
                 addr_a : in std_logic_vector(9 downto 0);
                 we_a : in std_logic;
-                write_a : in std_logic_vector(7 downto 0);
-                read_a : out std_logic_vector(7 downto 0);
-                n_state : out natural range 0 to 3
+                write_a : in std_logic_vector(31 downto 0);
+                read_a : out std_logic_vector(31 downto 0);
+                n_state : out natural range 0 to 3;
+                load    : in std_logic := '0'
             );
 end top;
 
 architecture Behavioral of top is
 
 constant ADDR_WIDTH : integer := 10;
+constant N_TAPS : integer := 4;
+constant DATA_WIDTH : integer := 32;
 
 component dpram
     generic(
-      ADDR_WIDTH : natural
+      ADDR_WIDTH : natural;
+      DATA_WIDTH : natural
       );
     port(
-		data_a	: in std_logic_vector(7 downto 0); 
-		data_b	: in std_logic_vector(7 downto 0);
+		data_a	: in std_logic_vector(DATA_WIDTH -1 downto 0); 
+		data_b	: in std_logic_vector(DATA_WIDTH -1 downto 0);
 		addr_a : in std_logic_vector(ADDR_WIDTH - 1 downto 0);
 		addr_b	: in std_logic_vector(ADDR_WIDTH - 1 downto 0);
 		we_a	: in std_logic := '1'; 
 		we_b	: in std_logic := '1';
 		clk		: in std_logic;
-		q_a		: out std_logic_vector(7 downto 0);
-		q_b		: out std_logic_vector(7 downto 0);
+		q_a		: out std_logic_vector(DATA_WIDTH -1 downto 0);
+		q_b		: out std_logic_vector(DATA_WIDTH -1 downto 0);
 		rst_dpr : in std_logic
       );
 end component;
 
 component fir_filter_4 is
+  generic(
+      N_TAPS : natural;
+      DATA_WIDTH : natural
+  );
   port (
     i_clk     : in  std_logic;
     i_rstb    : in  std_logic;
-    i_coeff_0 : in  std_logic_vector(7 downto 0);
-    i_coeff_1 : in  std_logic_vector(7 downto 0);
-    i_coeff_2 : in  std_logic_vector(7 downto 0);
-    i_coeff_3 : in  std_logic_vector(7 downto 0);
-    i_data    : in  std_logic_vector(7 downto 0);
-    o_data    : out std_logic_vector(7 downto 0);
-    we_fir : in std_logic
+    i_coeff : in  std_logic_vector(DATA_WIDTH -1 downto 0);
+    i_data    : in  std_logic_vector(DATA_WIDTH -1 downto 0);
+    o_data    : out std_logic_vector(DATA_WIDTH -1 downto 0);
+    we_fir    : in std_logic;
+    load      : in std_logic
     );
 end component; 
 
 signal addr_b : std_logic_vector(ADDR_WIDTH - 1 downto 0);
-signal fir_input, fir_output, read_b, write_b : std_logic_vector(7 downto 0);
+signal fir_input, fir_output, read_b, write_b : std_logic_vector(DATA_WIDTH -1 downto 0);
 signal we_b : std_logic;
 type state is (s_idle, s_load, s_read, s_write); --States for the FSM
 
-constant HALF_RAM : natural := 2 ** (ADDR_WIDTH - 1) - 1;
-signal counter : integer := 0;--std_logic_vector(ADDR_WIDTH - 2 downto 0);
+constant HALF_RAM : natural := 2 ** (ADDR_WIDTH - 1); --EDIT: Removed -1
+signal counter : integer := 0;
     
 signal state_curr, state_next : state;
 signal we_fir : std_logic;
 
 begin
 dpr : dpram
-    generic map(ADDR_WIDTH => ADDR_WIDTH)
+    generic map(
+        ADDR_WIDTH => ADDR_WIDTH,
+        DATA_WIDTH => DATA_WIDTH)
     port map(
 		data_a	=> write_a, 
 		data_b	=> write_b,
-		addr_a => addr_a,
+		addr_a  => addr_a,
 		addr_b	=> addr_b,
 		we_a	=> we_a,
 		we_b	=> we_b,
@@ -82,16 +87,16 @@ dpr : dpram
      ); 
      
 fir : fir_filter_4 
+    generic map(N_TAPS => N_TAPS,
+    DATA_WIDTH => DATA_WIDTH)
     port map(
         i_clk     => clk,
         i_rstb    => rstb,
-        i_coeff_0 => i_coeff_0,
-        i_coeff_1 => i_coeff_1,
-        i_coeff_2 => i_coeff_2,
-        i_coeff_3 => i_coeff_3,
-        i_data     => fir_input,
-        o_data   => fir_output,
-        we_fir => we_fir
+        i_coeff   => i_coeff,
+        i_data    => fir_input,
+        o_data    => fir_output,
+        we_fir    => we_fir,
+        load      => load
     );
 
     p_reg : process(clk, rstb) is --Current State Register
@@ -108,7 +113,6 @@ fir : fir_filter_4
         case state_curr is
             when s_idle => 
                 n_state <= 0;
-                --counter <= 0; --(others => '0');
                 
                 we_fir <= '0';
                 
@@ -120,7 +124,7 @@ fir : fir_filter_4
             when s_load =>
                 n_state <= 1;
                 
-                if we_a = '0' then
+                if we_a = '0'  then
                     state_next <= s_read;
                 end if;
                 
@@ -144,11 +148,11 @@ fir : fir_filter_4
                 we_b <= '1';
                 we_fir <= '0';
                 
-                addr_b <= std_logic_vector(to_unsigned(counter + HALF_RAM, addr_b'length));
+                addr_b <= std_logic_vector(to_unsigned(counter + HALF_RAM, addr_b'length)); --EDIT: removed -1
                 
                 write_b <= fir_output;
                 
-                if counter /= HALF_RAM - 1 then
+                if counter /= HALF_RAM then --EDIT: Removed +1
                     state_next <= s_read;
                 else
                     state_next <= s_idle; 
@@ -163,7 +167,7 @@ fir : fir_filter_4
     p_counter : process(state_curr, clk) is
     begin
         if state_curr = s_write and rising_edge(clk) then
-            if counter /= HALF_RAM then
+            if counter /= HALF_RAM then --EDIT: Removed +1
                 counter <= counter + 1;
             else
                 counter <= 0;
