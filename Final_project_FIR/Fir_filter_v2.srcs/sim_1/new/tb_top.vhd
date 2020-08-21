@@ -12,12 +12,13 @@ architecture Behavioral of tb_top is
 constant ADDR_WIDTH : integer := 10;
 constant N_TAPS     : integer := 16; 
 constant DATA_WIDTH : integer := 32;
+constant HALF_RAM : natural := 2 ** (ADDR_WIDTH - 1);
 component top is
     Port ( 
         clk     : in  std_logic;
         rstb    : in  std_logic;
         i_coeff : in  std_logic_vector(DATA_WIDTH-1 downto 0);
-        addr_a  : in  std_logic_vector(ADDR_WIDTH - 1 downto 0);
+        addr_a  : in  std_logic_vector(ADDR_WIDTH-1 downto 0);
         we_a    : in  std_logic;
         write_a : in  std_logic_vector(DATA_WIDTH-1 downto 0);
         read_a  : out std_logic_vector(DATA_WIDTH-1 downto 0);
@@ -130,11 +131,11 @@ begin
         --The first N_TAPS + 1 addresses contain gibberish (due to the time needed for initializing the FIR)
         --so they are skipped
         
-        addr_a <= std_logic_vector(to_unsigned(N_TAPS + 2 + 512, addr_a'length)); --Start from N_TAPS + 2
+        addr_a <= std_logic_vector(to_unsigned(N_TAPS + 2 + HALF_RAM, addr_a'length)); --Start from N_TAPS + 2
         wait until rising_edge(clk); -- Propagate state
         
         for i in N_TAPS + 3 to 2 ** (ADDR_WIDTH - 1) - 1 loop --Loop over the upper half of RAM
-            addr_a <= std_logic_vector(to_unsigned(i + 512, addr_a'length));
+            addr_a <= std_logic_vector(to_unsigned(i + HALF_RAM, addr_a'length));
             wait until rising_edge(clk);
             
             o_data_integer := to_integer(signed(read_a)); --Write to file
