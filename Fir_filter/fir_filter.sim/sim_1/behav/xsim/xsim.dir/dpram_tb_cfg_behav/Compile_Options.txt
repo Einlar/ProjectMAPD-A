@@ -1,1 +1,0 @@
--wto "15ebaf30515041bf83d1bbd4ec3d3a9c" --incr --debug "typical" --relax --mt "2" -L "xil_defaultlib" -L "secureip" --snapshot "dpram_tb_cfg_behav" "xil_defaultlib.dpram_tb_cfg" -log "elaborate.log" 
